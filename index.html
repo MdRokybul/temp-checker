@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="input" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="submit" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img height="100px" width="100px" id="myImg" src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="city">Dhaka</h1>
+            <h3><span id="temp">38.06</span>&deg;C</h3>
+            <h1 id="clouds" class="lead">Clouds</h1>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById("submit").addEventListener("click", function () {
+            let input = document.getElementById("input").value;
+            tempCheck(input);
+            document.getElementById("input").value = "";
+
+        })
+
+        function tempCheck(input) {
+            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${input}&appid=1179752ae067ad7fbc758d7d7a15726a`)
+                .then(res => res.json())
+                .then(data => {
+                    const weather = data.weather[0];
+                    const { main, icon } = weather;
+                    const cityName = data.name;
+                    const tempMain = data.main;
+                    const temp = tempMain.temp;
+                    const temperature = (temp - 273.15).toFixed(2);
+                    document.getElementById("myImg").src = `https://openweathermap.org/img/wn/${icon}.png`;
+                    document.getElementById("city").innerText = cityName;
+                    document.getElementById("temp").innerText = temperature;
+                    document.getElementById("clouds").innerText = main;
+                })
+                .catch(error => alert("Wrong City Name!"));
+        }
+
+
+    </script>
+</body>
+
+</html>
